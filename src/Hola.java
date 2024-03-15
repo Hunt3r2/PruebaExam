@@ -10,11 +10,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
 import javax.swing.JComboBox;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.border.EtchedBorder;
+import javax.swing.JRadioButton;
 
 public class Hola extends JFrame {
 
@@ -24,6 +30,11 @@ public class Hola extends JFrame {
     private Persona persona[] = new Persona[10];
     private int contador = 0;
     private JTextField txtBuscarPersona;
+    private JTextField textField;
+    private JTextField textField_1;
+    private ButtonGroup grupoRadio;
+    private JRadioButton rdbtnH;
+    private JRadioButton rdbtnM;
 
     /**
      * Launch the application.
@@ -46,8 +57,8 @@ public class Hola extends JFrame {
      */
     public Hola() {
 
-    	clasePersona = new Persona(null, null, rootPaneCheckingEnabled, getTitle());
-    	
+        clasePersona = new Persona(null, null, rootPaneCheckingEnabled, getTitle());
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         
@@ -82,11 +93,11 @@ public class Hola extends JFrame {
         
         JButton btnNewButton = new JButton("Buscar");
         btnNewButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		buscar(txtBuscarPersona.getText());
-        		
-        	}
+            public void actionPerformed(ActionEvent e) {
+                
+                buscar(txtBuscarPersona.getText());
+                
+            }
         });
         menuBar.add(btnNewButton);
         contentPane = new JPanel();
@@ -95,13 +106,39 @@ public class Hola extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 20, 114, 188);
-        contentPane.add(scrollPane);
+        JPanel panel = new JPanel();
+        panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(153, 180, 209), null), "Crear persona", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panel.setBounds(10, 45, 150, 180);
+        contentPane.add(panel);
+        panel.setVisible(false);
         
-        JList list = new JList(persona);
-        scrollPane.setViewportView(list);
-        list.setValueIsAdjusting(true);
+        textField = new JTextField();
+        panel.add(textField);
+        textField.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 2, true), "Nombre", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        textField.setColumns(10);
+        
+        textField_1 = new JTextField();
+        panel.add(textField_1);
+        textField_1.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 2, true), "Apellido", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        textField_1.setColumns(10);
+        
+        rdbtnH = new JRadioButton("Hombre");
+        panel.add(rdbtnH);
+        
+        rdbtnM = new JRadioButton("Mujer");
+        panel.add(rdbtnM);
+        
+        grupoRadio = new ButtonGroup();
+        grupoRadio.add(rdbtnH);
+        grupoRadio.add(rdbtnM);
+        
+        JButton btnCrear = new JButton("Crear");
+        btnCrear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                crearPersonaAMano();
+            }
+        });
+        panel.add(btnCrear);
 
         mntmToda.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -111,13 +148,13 @@ public class Hola extends JFrame {
         
         mntmHombre.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	crearPersonasAutomaticamenteHombre(1);
+                crearPersonasAutomaticamenteHombre(1);
             }
         });
         
         mntmMujer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	crearPersonasAutomaticamenteMujer(1);
+                crearPersonasAutomaticamenteMujer(1);
             }
         });
         
@@ -132,8 +169,27 @@ public class Hola extends JFrame {
                 mostrarInformacion(false, false);
             }
         });
+        
+        JButton btnNewButton_1 = new JButton("Mostrar");
+        btnNewButton_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (btnNewButton_1.getText() == "Mostrar") {
+                    panel.setVisible(true);
+                    btnNewButton_1.setText("Ocultar");
+                }else {
+                    panel.setVisible(false);
+                    btnNewButton_1.setText("Mostrar");
+                }
+                
+                
+                
+            }
+        });
+        btnNewButton_1.setBounds(10, 11, 150, 23);
+        contentPane.add(btnNewButton_1);
 
     }
+    
 
     private void crearPersonasAutomaticamenteHombre(int cantidad) {
         String[] nombres = {"Juan", "Pedro", "Luis"};
@@ -203,5 +259,20 @@ public class Hola extends JFrame {
         }
         JOptionPane.showMessageDialog(this, sb.toString(), "Información",
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void crearPersonaAMano() {
+        String nombre = textField.getText();
+        String apellido = textField_1.getText();
+        String genero = "";
+
+        if (rdbtnH.isSelected()) {
+            genero = "Hombre";
+        } else if (rdbtnM.isSelected()) {
+            genero = "Mujer";
+        }
+
+        persona[contador] = new Persona(nombre, apellido, genero.equals("Hombre"), genero);
+        contador++;
     }
 }

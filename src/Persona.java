@@ -37,4 +37,16 @@ public class Persona {
     public void setGenero(String genero) {
         this.genero = genero;
     }
+    
+    public void setNombre(String nombres) {
+    	
+    	this.nombres = nombres;
+    	
+    }
+
+	public void setApellido(String apellidos) {
+		
+		this.apellidos = apellidos;
+		
+	}
 }
